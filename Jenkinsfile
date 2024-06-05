@@ -3,16 +3,14 @@ node {
         stage('Checkout') {
             git branch: 'master', url: 'https://github.com/hasannader2040/craps-game.git'
         }
+        
         stage('Build') {
-            echo "Build stage"
-            sh './mvnw clean install'  // Assuming you're using Maven Wrapper
+            echo 'Build stage'
+            sh 'chmod +x ./mvnw'  // Add this line to give execute permission to the mvnw script
+            sh './mvnw clean install'
         }
-        stage('Test') {
-            echo "Test stage"
-            sh './mvnw test'
-        }
-    } catch (e) {
-        echo "An error occurred: ${e.getMessage()}"
-        throw e
+    } catch (Exception e) {
+        echo "An error occurred: ${e}"
+        currentBuild.result = 'FAILURE'
     }
 }
