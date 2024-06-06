@@ -1,33 +1,24 @@
 node {
     git branch: 'main', url: 'https://github.com/hasannader2040/craps-game.git'
 
-    stage('Preparation') {
+    stage('build') {
         try {
-            sh 'echo "Preparation stage"'
+            sh 'echo "build stage"'
             sh 'ls -l ./mvnw' // Check the permissions before chmod
             sh 'chmod +x ./mvnw' // Set execute permissions on mvnw
             sh 'ls -l ./mvnw' // Check the permissions after chmod
-        } catch (Exception e) {
-            sh 'echo "exception found during preparation"'
-            throw e
-        }
-    }
-
-    stage('Build') {
-        try {
-            sh 'echo "Build stage"'
             sh './mvnw clean install' // Run the Maven build
         } catch (Exception e) {
-            sh 'echo "exception found during build"'
+            sh 'echo "exception found"'
             throw e
         }
     }
 
-    stage('Test') {
+    stage('test') {
         if (env.BRANCH_NAME == 'feat') {
-            sh 'echo "Test stage"'
+            sh 'echo "test stage"'
         } else {
-            sh 'echo "Skip test stage"'
+            sh 'echo "skip test stage"'
         }
     }
 }
