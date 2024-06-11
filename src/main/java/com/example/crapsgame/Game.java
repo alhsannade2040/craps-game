@@ -1,32 +1,30 @@
 package com.example.crapsgame;
+
 import java.util.Random;
+
 public class Game {
     private String name;
-       private Player player1; //
+    private Player player1;
     private Player player2;
-    static boolean isOVer;
-    private int point; // to keep playing if he didnt pass or lose
-    private String gameState;
-    public Game(int point,String name)
-    {
-        this.point = point;
-        this.name=name;
-    }
-    public void roll(){
-        Random rand = new Random();
-        rand.nextInt();
-        int die1 = ( (rand() % 6) + 1);
-        int die2 = ( (rand() % 6) + 1);
+    static boolean isOver;
+    private int point;
 
+    public Game(int point, String name) {
+        this.point = point;
+        this.name = name;
     }
-    private int rand() {
-        Math.random();
-        return rand();
+
+    public void roll() {
+        Random rand = new Random();
+        int die1 = rand.nextInt(6) + 1;
+        int die2 = rand.nextInt(6) + 1;
+        System.out.println("Rolled: " + die1 + " + " + die2 + " = " + (die1 + die2));
     }
-    //   public int getBank(){
-//        return bank;
-//    }
-    // how to return it again here
+
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -47,15 +45,22 @@ public class Game {
         this.player2 = player2;
     }
 
-    void add(Player player1, Player player2){
-        this.player1=player1;
-        this.player2=player1;
+    void add(Player player1, Player player2) {
+        this.player1 = player1;
+        this.player2 = player2;
     }
 
-   void start(){
-//        player1.Move();
+    void start() {
+        while (!isOver) {
+            player1.move();
+            roll();
+            player1.autoMove();
 
-//        player1.Move();
-//        player2.Move();
-   }
+            if (isOver) break;
+
+            player2.move();
+            roll();
+            player2.autoMove();
+        }
+    }
 }

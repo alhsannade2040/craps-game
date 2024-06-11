@@ -1,5 +1,5 @@
 node {
-    git branch: 'main', url: 'https://github.com/hasannader2040/craps-game.git'
+    git branch: 'pipeline', url: 'https://github.com/hasannader2040/craps-game.git'
 
     stage('build') {
         try {
