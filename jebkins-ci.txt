@@ -1,26 +1,29 @@
-    pipeline {
-        agent any
-        stages {
-            stage('Checkout') {
-                steps {
-                    script {
-                        git branch: 'master', url: 'https://github.com/hasannader2040/craps-game.git', credentialsId: 'your-credentials-id'
-                    }
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    echo 'Checking out code...'
+                    git branch: 'master', url: 'https://github.com/hasannader2040/craps-game.git', credentialsId: 'your-credentials-id'
                 }
             }
-            stage('Build') {
-                steps {
-                    script {
-                        sh 'mvn clean package'
-                    }
+        }
+        stage('Build') {
+            steps {
+                script {
+                    echo 'Building the project...'
+                    sh 'mvn clean package'
                 }
             }
-            stage('Test') {
-                steps {
-                    script {
-                        sh 'mvn test'
-                    }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    echo 'Running tests...'
+                    sh 'mvn test'
                 }
             }
         }
     }
+}
