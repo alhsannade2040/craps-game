@@ -1,38 +1,38 @@
-pipeline {
-   agent {
-     label 'aws-Agent-Node'
-   }
+    pipeline {
+    agent {
+        label 'aws-Agent-Node'
+    }
 
 
-    stages {
-        stage('build') {
-            steps {
-                script {
-                 sh 'mvn clean package'
+        stages {
+            stage('build') {
+                steps {
+                    script {
+                    sh 'mvn clean package'
+                    }
                 }
             }
-        }
-        stage('test') {
-            steps {
-                script {
-                    echo "test in progress"
-                    if (env.BRANCH_NAME == 'feat') {
-                        sh 'echo "test stage"'
-                    } else {
-                        sh 'echo "skip test stage"'
+            stage('test') {
+                steps {
+                    script {
+                        echo "test in progress"
+                        if (env.BRANCH_NAME == 'feat') {
+                            sh 'echo "test stage"'
+                        } else {
+                            sh 'echo "skip test stage"'
+                        }
                     }
                 }
             }
         }
-    }
 
-    post {
-      success {
-        slackSend channel: '#jenkins-ci', message: 'slackSend "Build success- ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"', teamDomain: 'myfirst-project-group', tokenCredentialId: 'slack-notifications'
-      }
-        failure {
-          slackSend channel: '#jenkins-ci', message: 'slackSend "Build failed- ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"', teamDomain: 'myfirst-project-group', tokenCredentialId: 'slack-notifications'
+        post {
+        success {
+            slackSend channel: '#jenkins-ci', message: 'slackSend "Build success- ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"', teamDomain: 'myfirst-project-group', tokenCredentialId: 'slack-notifications'
         }
-    }
+            failure {
+            slackSend channel: '#jenkins-ci', message: 'slackSend "Build failed- ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"', teamDomain: 'myfirst-project-group', tokenCredentialId: 'slack-notifications'
+            }
+        }
 
-}
+    }
