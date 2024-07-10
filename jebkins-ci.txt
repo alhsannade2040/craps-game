@@ -1,6 +1,22 @@
 pipline{
     agent any
     stages{
-        
+        stage('build'){
+            steps{
+                screipt{
+                    sh 'mvn clean package'
+                }
+            }
+        }
+
+      stage('test'){
+            steps{
+                screipt{
+                    sh 'mvn test'
+                }
+            }
+        }
+
+
     }
 }
