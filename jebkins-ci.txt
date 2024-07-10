@@ -1,22 +1,29 @@
-pipline{
+pipeline {
     agent any
-    stages{
-        stage('build'){
-            steps{
-                screipt{
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    echo 'Checking out code...'
+                    git branch: 'master', url: 'https://github.com/hasannader2040/craps-game.git', credentialsId: 'your-credentials-id'
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                script {
+                    echo 'Building the project...'
                     sh 'mvn clean package'
                 }
             }
         }
-
-      stage('test'){
-            steps{
-                screipt{
+        stage('Test') {
+            steps {
+                script {
+                    echo 'Running tests...'
                     sh 'mvn test'
                 }
             }
         }
-
-
     }
 }
