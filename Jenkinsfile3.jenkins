@@ -1,11 +1,11 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials-id')
-        DOCKER_IMAGE = 'yourdockerhubusername/java-app:latest'
-        KUBECONFIG_CREDENTIALS = credentials('kubeconfig-credentials-id')
-    }
+    // environment {
+    //     DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials-id')
+    //     DOCKER_IMAGE = 'yourdockerhubusername/java-app:latest'
+    //     KUBECONFIG_CREDENTIALS = credentials('kubeconfig-credentials-id')
+    // }
 
     stages {
         stage('Build') {
