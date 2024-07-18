@@ -1,56 +1,51 @@
 pipeline {
+    agent any
 
-agent any
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials-id')
+        DOCKER_IMAGE = 'yourdockerhubusername/java-app:latest'
+        KUBECONFIG_CREDENTIALS = credentials('kubeconfig-credentials-id')
+    }
 
-// environment {
-//     DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials-id')
-//     DOCKER_IMAGE = 'yourdockerhubusername/java-app:latest'
-//     KUBECONFIG_CREDENTIALS = credentials('kubeconfig-credentials-id')
-// }
-
-stages {
-stage('build') {
-    steps {
-        script{
-            sh 'docker build -t thebest .' 
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
         }
-    }
-}
-stage('Build') {
-    steps {
-        sh 'mvn clean package'
-    }
-}
-stage('push') {
-    steps {
-        script {
-            withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'Password ', usernameVariable: 'Username '
-            sh 'docker login --username $Userbane/thebest'
-            sh 'docker tag '
-            sh'docker push $Username/thebest'
-            
-                ) 
-                ]
-                )
+        stage('Docker Build') {
+            steps {
+                script {
+                    sh 'docker build -t $DOCKER_IMAGE .'
+                }
+            }
         }
-    }
-}
-stage('Deploy ') {
-    steps {
-        script {
-            withAWS ( credentials: 'aws-cli , region: 'us-east-2') {
-            sh 'aws eks update-kubeconfig --region us-east-2 --name eks'
-                sh 'kubectl apply -f ./k8s/java-app.yaml'
+        stage('Docker Push') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh 'docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD'
+                        sh 'docker push $DOCKER_IMAGE'
+                    }
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'kubeconfig-credentials-id', variable: 'KUBECONFIG')]) {
+                        withEnv(["KUBECONFIG=$KUBECONFIG"]) {
+                            sh 'kubectl apply -f ./k8s/java-app.yaml'
+                        }
+                    }
+                }
             }
         }
     }
-}
 
-}
-
-post {
-always {
-    cleanWs()
-}
-}
+    post {
+        always {
+            cleanWs()
+        }
+    }
 }
