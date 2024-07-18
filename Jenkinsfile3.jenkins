@@ -1,0 +1,56 @@
+pipeline {
+
+agent any
+
+// environment {
+//     DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials-id')
+//     DOCKER_IMAGE = 'yourdockerhubusername/java-app:latest'
+//     KUBECONFIG_CREDENTIALS = credentials('kubeconfig-credentials-id')
+// }
+
+stages {
+stage('build') {
+    steps {
+        script{
+            sh 'docker build -t thebest .' 
+        }
+    }
+}
+stage('Build') {
+    steps {
+        sh 'mvn clean package'
+    }
+}
+stage('push') {
+    steps {
+        script {
+            withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'Password ', usernameVariable: 'Username '
+            sh 'docker login --username $Userbane/thebest'
+            sh 'docker tag '
+            sh'docker push $Username/thebest'
+            
+                ) 
+                ]
+                )
+        }
+    }
+}
+stage('Deploy ') {
+    steps {
+        script {
+            withAWS ( credentials: 'aws-cli , region: 'us-east-2') {
+            sh 'aws eks update-kubeconfig --region us-east-2 --name eks'
+                sh 'kubectl apply -f ./k8s/java-app.yaml'
+            }
+        }
+    }
+}
+
+}
+
+post {
+always {
+    cleanWs()
+}
+}
+}
