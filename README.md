@@ -9,3 +9,6 @@
 '''mvn test'''
 
 '''testing ci'''
+
+
+![2 Deploying A Java App onAWS EKS](https://github.com/user-attachments/assets/d22ae889-5e33-4e53-976c-a05a77dcc9a1)
