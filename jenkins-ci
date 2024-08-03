@@ -5,7 +5,7 @@ pipeline {
             steps {
                 script {
                     echo 'Checking out code...'
-                    git branch: 'master', url: 'https://github.com/hasannader2040/craps-game.git', credentialsId: 'your-credentials-id'
+                   // git branch: 'jenkins-ci', url: 'https://github.com/hasannader2040/craps-game.git', credentialsId: 'your-credentials-id'
                 }
             }
         }
